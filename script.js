@@ -60,7 +60,8 @@ function calculateProductDiscounts(arrayOfProducts) {
 	// Loop through the array of products
 	for (let i = 0; i < arrayOfProducts.length; i++) {
 		// "i" just can't find a single product...
-		const product = arrayOfProducts;
+		// added [i] of arrayOfProducts
+		const product = arrayOfProducts[i];
 
 		// Calculate the discount for this one product object
 		const discount = calculateDiscount(product);
@@ -86,14 +87,16 @@ function calculateDiscount(product) {
 	let discountPercent = reviewDiscount + yearAdjustment + priceAdjustment;
 
 	// The discount cannot be more than 25%, or less that 0%
-	if (discountPercent < 0.25) {
+	// changed less than to greater than
+	if (discountPercent > 0.25) {
 		discountPercent = 0.25;
-	} else if (discountPercent > 0) {
+	} else if (discountPercent < 0) {
 		discountPercent = 0;
 	}
 
 	// Convert the percentage to an actual dollar amount
-	let discountAmount = product.price * percent;
+	// changed percent to discountPercent so previously created variable is used
+	let discountAmount = product.price * discountPercent;
 
 	return discountAmount;
 }
@@ -103,11 +106,14 @@ function getReviewDiscount(product) {
 	let discount;
 
 	// 1, 2, or 3, you can't catch me!
-	if (product.reviews.avgRating = 5) {
+	// changed single equals to triple equals so doesn't set value at 5
+	if (product.reviews.avgRating === 5) {
 		// perfect rating 🏆, no discount
+		// setting discount variable equal to 0
 		discount = 0;
 	}
 	else if (product.reviews.avgRating > 4.8) {
+		// setting discount variable equal to .05
 		discount = 0.05;
 	}
 	else if (product.reviews.avgRating > 4.0) {
@@ -120,29 +126,36 @@ function getReviewDiscount(product) {
 		discount = 0.20;
 	}
 
-
 	// Low rating, few reviews, bigger discount
 	if (product.reviews.count < 100) {
 		discount += 0.10;
 	}
-
-	// no discount for you!
+	// returning discount with avg rating and review count if statements accounted for
+	return discount;
 }
 
 // Old products get an extra 10% discount
 function getYearAdjustment(yearPosted) {
-	if (yearPosted < 2010) {
-		return "0.10";
+	// added products. to yearPosted
+	if (products.yearPosted < 2010) {
+		// changed str to number
+		return 0.10;
 	}
-	return "0";
+	// changed str to number and added else 
+	else {
+		return 0;
+	}
 }
-
 // Expensive products get an extra 8% discount
 function getPriceAdjustment(price) {
 	if (price > 30) {
-		return "0.08";
+		// changed str to number
+		return 0.08;
 	}
-	return "0";
+	// changed str to number and added else
+	else {
+		return 0;
+	}
 }
 
 // Render a <tr> element to the DOM for a product
@@ -159,3 +172,5 @@ function renderProduct(product, discount) {
 		</li>
 	`);
 }
+
+start();
